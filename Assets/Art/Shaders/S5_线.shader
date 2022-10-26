@@ -51,8 +51,10 @@ Shader "Custom/S5_线"
 
                 fixed online_1 = OnLine(0.25, pos.y, _Width);
                 fixed online_2 = OnLine(0.25, pos.x, _Width);
+                fixed incircle_1 = InCircle(pos.xy, float2(-0.1, -0.1), 0.25);
                 fixed3 color = online_1 * _Color.rgb;
                 color += online_2 * _Color.rgb;
+                color += incircle_1 * _Color.rgb;
                 return float4(color, 1);
             }
 
