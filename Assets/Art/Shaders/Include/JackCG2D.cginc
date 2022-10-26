@@ -14,6 +14,13 @@ float InCircleSmooth(float2 pt, float2 center, float radius, float smooth) {
     return 1.0 - smoothstep(radius - smooth, radius + smooth, len);
 }
 
+float OnLine(float a, float b, float width, float thickness) {
+    float half_width = width * 0.5;
+    float sa = smoothstep(a - half_width - thickness, a - half_width, b);
+    float sb = smoothstep(a + half_width, a + half_width + thickness, b);
+    return sa - sb;
+}
+
 // return 0 when pt not in rectangle
 // return 1 when pt in rectangle
 float InRect(float2 pt, float2 center, float2 size) {
