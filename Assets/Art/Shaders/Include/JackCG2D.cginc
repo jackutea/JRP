@@ -24,6 +24,14 @@ float InRect(float2 pt, float2 center, float2 size) {
     return horz * vert;
 }
 
+float InRectAnchor(float2 pt, float2 anchor, float2 center, float2 size) {
+    float2 p = pt - center;
+    float2 halfSize = size * 0.5;
+    float horz = step(-halfSize.x - anchor.x, p.x) - step(halfSize.x - anchor.x, p.x);
+    float vert = step(-halfSize.y - anchor.y, p.y) - step(halfSize.y - anchor.y, p.y);
+    return horz * vert;
+}
+
 // ==== Matrix ====
 float2x2 MatRotate(float angle) {
     float c = cos(angle);

@@ -5,6 +5,9 @@ Shader "Custom/S4_形状_正方形"
         _XOffset ("X Offset", Range(-1,1)) = 0
         _YOffset ("Y Offset", Range(-1,1)) = 0
         _Scale ("Scale", Range(0,2)) = 1
+        _Rotate ("Rotate", Range(-1, 1)) = 0
+        _Anchor ("Anchor", Vector) = (0,0,0,0)
+        _Size ("Size", Vector) = (1,1,1,1)
     }
     SubShader
     {
@@ -23,6 +26,9 @@ Shader "Custom/S4_形状_正方形"
             float _XOffset;
             float _YOffset;
             float _Scale;
+            float _Rotate;
+            float4 _Anchor;
+            float4 _Size;
 
             struct v2f
             {
@@ -43,16 +49,14 @@ Shader "Custom/S4_形状_正方形"
             float4 frag(v2f i) : SV_Target
             { 
                 float2 center = float2(_XOffset, _YOffset);
-                float2 pos = i.pos.xy;
-                float2 size = float2(0.5, 0.5);
+                float2 pos = i.pos * 2.0;
+                float2 size = _Size;
                 float2x2 mat_s = MatScale(_Scale);
-                size = mul(mat_s, size);
-                float in_circle = InRect(pos, center, size);
-                if (in_circle == 1) {
-                    return float4(1, 1, 0, 1);
-                    } else {
-                    return float4(0, 0, 0, 1);
-                }
+                float2x2 mat_r = MatRotate(_Rotate * UNITY_PI);
+                float2x2 mat = mul(mat_r, mat_s);
+                pos = mul(mat, pos);
+                float in_circle = InRectAnchor(pos.xy, _Anchor.xy, center, size);
+                return float4(1, 1, 0, 1) * in_circle;
             }
 
             ENDCG
