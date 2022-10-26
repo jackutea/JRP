@@ -14,11 +14,17 @@ float InCircleSmooth(float2 pt, float2 center, float radius, float smooth) {
     return 1.0 - smoothstep(radius - smooth, radius + smooth, len);
 }
 
-float OnLine(float a, float b, float width, float thickness) {
+// 理解为 "切割" 而非 "画线"
+float OnLine(float edge, float v, float width) {
     float half_width = width * 0.5;
-    float sa = smoothstep(a - half_width - thickness, a - half_width, b);
-    float sb = smoothstep(a + half_width, a + half_width + thickness, b);
-    return sa - sb;
+    return step(edge - half_width, v) - step(edge + half_width, v);
+}
+
+float OnLineSmooth(float edge, float v, float width, float smooth) {
+    float half_width = width * 0.5;
+    float sl = smoothstep(edge - half_width - smooth, edge - half_width, v);
+    float sr = smoothstep(edge + half_width, edge + half_width + smooth, v);
+    return sl - sr;
 }
 
 // return 0 when pt not in rectangle

@@ -46,9 +46,13 @@ Shader "Custom/S5_线"
             // 逐像素上色
             float4 frag(v2f i) : SV_Target
             {
+                float2 pos = i.pos.xy;
                 float2 uv = i.uv.xy;
-                fixed online = OnLine(uv.x, uv.y, _Width, _Thickness);
-                fixed3 color = lerp(0, _Color.rgb, online);
+
+                fixed online_1 = OnLine(0.25, pos.y, _Width);
+                fixed online_2 = OnLine(0.25, pos.x, _Width);
+                fixed3 color = online_1 * _Color.rgb;
+                color += online_2 * _Color.rgb;
                 return float4(color, 1);
             }
 
