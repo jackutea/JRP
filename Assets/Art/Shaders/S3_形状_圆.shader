@@ -4,6 +4,7 @@ Shader "Custom/S3_形状_圆"
     {
         _XOffset ("X Offset", Range(-1,1)) = 0
         _YOffset ("Y Offset", Range(-1,1)) = 0
+        _Smooth ("Smooth", Range(0,1)) = 0
     }
     SubShader
     {
@@ -21,6 +22,7 @@ Shader "Custom/S3_形状_圆"
 
             float _XOffset;
             float _YOffset;
+            float _Smooth;
 
             struct v2f
             {
@@ -41,12 +43,8 @@ Shader "Custom/S3_形状_圆"
             float4 frag(v2f i) : SV_Target
             { 
                 float2 center = float2(_XOffset, _YOffset);
-                float in_circle = InCircle(i.pos.xy, center, 0.5);
-                if (in_circle == 1) {
-                    return float4(1, 1, 0, 1);
-                } else {
-                    return float4(0, 0, 0, 1);
-                }
+                float in_circle = InCircleSmooth(i.pos.xy, center, 0.5, _Smooth);
+                return float4(1, 1, 0, 1) * in_circle;
             }
 
             ENDCG

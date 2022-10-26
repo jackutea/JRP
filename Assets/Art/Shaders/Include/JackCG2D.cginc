@@ -9,6 +9,11 @@ float InCircle(float2 pt, float2 center, float radius) {
     return 1.0 - step(radius, len);
 }
 
+float InCircleSmooth(float2 pt, float2 center, float radius, float smooth) {
+    float len = length(pt - center);
+    return 1.0 - smoothstep(radius - smooth, radius + smooth, len);
+}
+
 // return 0 when pt not in rectangle
 // return 1 when pt in rectangle
 float InRect(float2 pt, float2 center, float2 size) {
