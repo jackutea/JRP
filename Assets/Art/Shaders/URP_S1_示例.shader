@@ -65,7 +65,7 @@ Shader "Custom/URP/3D/URP_S1_示例" {
 
                 // 相当于 tex2D(_MainTex, i.uv)
                 half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
-                OUT.color = baseMap * _BaseColor;
+                OUT.color = min(baseMap, float4(IN.uv.x, IN.posCS.xy, 1));
 
                 return OUT;
             }
