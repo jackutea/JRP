@@ -37,8 +37,10 @@ Shader "Custom/S6_噪声"
 
             frag_output frag(vert_input i) {
                 frag_output o;
+                float2 pos = i.uv * 8.0;
                 float3 color = float3(1, 1, 1);
-                float rd = PerlinNoiseCustom(i.uv, 1, 48, 4800, _Time.y);
+                float rd = Noise(pos);
+                rd = smoothstep(0.4, 0.6, rd);
                 o.color = float4(color * rd, 1);
                 return o;
             }
