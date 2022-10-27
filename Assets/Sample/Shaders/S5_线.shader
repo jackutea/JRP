@@ -18,7 +18,7 @@ Shader "Custom/S5_线"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/Include/JackCG2D.cginc"
+            #include "Assets/Src/Include/JackCG2D.cginc"
             
             float _Width;
             float4 _Color;
