@@ -17,7 +17,7 @@ Shader "Custom/3D/S8_顶点变换" {
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Include/JackCG3D.cginc"
+            #include "Assets/Include/JackCG3D.cginc"
 
             float _Size;
             sampler3D _MainTex;

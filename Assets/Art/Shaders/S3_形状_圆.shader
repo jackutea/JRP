@@ -18,7 +18,7 @@ Shader "Custom/S3_形状_圆"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Include/JackCG2D.cginc"
+            #include "Assets/Include/JackCG2D.cginc"
 
             float _XOffset;
             float _YOffset;

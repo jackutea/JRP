@@ -17,7 +17,7 @@ Shader "Custom/S6_噪声"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Include/JackCGGeneric.cginc"
+            #include "Assets/Include/JackCGGeneric.cginc"
 
             struct vert_input {
                 float4 vertex : POSITION;
