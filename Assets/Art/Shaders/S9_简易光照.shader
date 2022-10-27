@@ -9,7 +9,7 @@ Shader "Custom/3D/S9_简易光照" {
         Tags { "RenderType" = "Opaque"}
         LOD 100
 
-        pass {
+        Pass {
 
             CGPROGRAM
 
