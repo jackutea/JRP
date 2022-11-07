@@ -1,15 +1,14 @@
-Shader "Custom/3D/S9_简易光照" {
+Shader "Custom/3D/S9_简易顶点光照" {
 
     Properties {
 
         // 漫反射
         _Diffuse ("Diffuse", Color) = (1,1,1,1)
 
-        // 环境光
-        _Ambient ("Ambient", Color) = (0.5,0.5,0.5,1)
-
         // 高光
         _Specular ("Specular", Color) = (1,1,1,1)
+
+        _Gloss ("Gloss", Range(8, 200)) = 10
         
     }
 
@@ -33,12 +32,12 @@ Shader "Custom/3D/S9_简易光照" {
             #include "UnityLightingCommon.cginc"
 
             float4 _Diffuse;
-            float4 _Ambient;
             float4 _Specular;
+            float _Gloss;
 
             struct v2f {
                 float4 vertex : SV_POSITION;
-                float4 diff : COLOR;
+                float3 diff : COLOR;
             };
 
             v2f vert(appdata_base v) {
@@ -55,27 +54,24 @@ Shader "Custom/3D/S9_简易光照" {
                 float ndot = dot(worldNormal, normalize(lightDir));
                 float nl = max(0, ndot);
 
-                // 光照
-                float3 diff = nl * _LightColor0.rgb;
-
                 // 漫反射光照
-                diff *= _Diffuse.rgb;
+                float3 diff = nl * _LightColor0.rgb * _Diffuse.rgb;
 
                 // 环境光
-                diff += _Ambient.rgb;
+                diff += UNITY_LIGHTMODEL_AMBIENT.rgb;
 
                 // ==== 视野内的光照计算 ====
                 // 高光
                 float3 reflectDir = normalize(reflect(-lightDir, worldNormal));
 
-                float3 viewDir = normalize(_WorldSpaceCameraPos - v.vertex.xyz);
+                float3 viewDir = normalize(_WorldSpaceCameraPos - mul(v.vertex, unity_WorldToObject).xyz);
 
-                float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-                float3 specColor = _Specular * spec;
+                float spec = pow(max(dot(viewDir, reflectDir), 0.0), _Gloss);
+                float3 specColor = _LightColor0 * _Specular * spec;
 
                 diff += specColor;
 
-                o.diff = float4(diff, 1);
+                o.diff = diff;
 
                 return o;
             }
@@ -86,8 +82,7 @@ Shader "Custom/3D/S9_简易光照" {
 
             output frag(v2f i) {
                 output o;
-                o.color = float4(1, 1, 0, 1);
-                o.color *= i.diff;
+                o.color = float4(i.diff, 1);
                 return o;
             }
 
