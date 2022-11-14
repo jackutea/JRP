@@ -15,7 +15,6 @@ Shader "Custom/3D/S9_简易顶点光照" {
     SubShader {
 
         Tags {
-            "LightMode" = "ForwardBase"
             "RenderType" = "Opaque"
         }
 

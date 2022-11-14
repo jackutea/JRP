@@ -9,8 +9,12 @@ namespace JackRenderPipeline {
         public const string BUFFER_CAMERA = "CameraBuffer";
 
         // - Shader
-        public static readonly ShaderTagId SHADER_TAG_DEFAULT = new ShaderTagId("SRPDefaultUnlit");
-        public static readonly ShaderTagId[] SHADER_TAG_UNDUPPORTED_ARRAY = new ShaderTagId[] {
+        public static readonly ShaderTagId[] SHADER_TAG_SUPPORTED_ARRAY = new ShaderTagId[] {
+            new ShaderTagId("JRPLightMode"),
+            new ShaderTagId("SRPDefaultUnlit"),
+        };
+
+        public static readonly ShaderTagId[] SHADER_TAG_UNSUPPORTED_ARRAY = new ShaderTagId[] {
             new ShaderTagId("Always"),
             new ShaderTagId("ForwardBase"),
             new ShaderTagId("PrepassBase"),

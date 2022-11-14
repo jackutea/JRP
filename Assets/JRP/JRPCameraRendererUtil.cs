@@ -83,7 +83,13 @@ namespace JackRenderPipeline {
             sortingSettings.criteria = SortingCriteria.CommonOpaque;
 
             // - Draw Setting
-            DrawingSettings drawingSettings = new DrawingSettings(JRPConfig.SHADER_TAG_DEFAULT, sortingSettings);
+            DrawingSettings drawingSettings = new DrawingSettings();
+            drawingSettings.sortingSettings = sortingSettings;
+
+            var arr = JRPConfig.SHADER_TAG_SUPPORTED_ARRAY;
+            for (int i = 0; i < arr.Length; i += 1) {
+                drawingSettings.SetShaderPassName(i, arr[i]);
+            }
 
             // - Filter Setting
             // 处理透明
@@ -101,7 +107,13 @@ namespace JackRenderPipeline {
             sortingSettings.criteria = SortingCriteria.CommonTransparent;
 
             // - Draw Setting
-            DrawingSettings drawingSettings = new DrawingSettings(JRPConfig.SHADER_TAG_DEFAULT, sortingSettings);
+            DrawingSettings drawingSettings = new DrawingSettings();
+            drawingSettings.sortingSettings = sortingSettings;
+
+            var arr = JRPConfig.SHADER_TAG_SUPPORTED_ARRAY;
+            for (int i = 0; i < arr.Length; i += 1) {
+                drawingSettings.SetShaderPassName(i, arr[i]);
+            }
 
             // - Filter Setting
             // 处理不透明
@@ -120,7 +132,7 @@ namespace JackRenderPipeline {
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
 
-            var arr = JRPConfig.SHADER_TAG_UNDUPPORTED_ARRAY;
+            var arr = JRPConfig.SHADER_TAG_UNSUPPORTED_ARRAY;
             for (int i = 0; i < arr.Length; i += 1) {
                 drawingSettings.SetShaderPassName(i, arr[i]);
                 drawingSettings.overrideMaterial = JRPConfig.MAT_ERROR;
