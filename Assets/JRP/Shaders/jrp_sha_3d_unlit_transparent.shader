@@ -1,17 +1,20 @@
-Shader "JRP/3D/jrp_3d_default_unlit" {
+Shader "JRP/3D/jrp_3d_unlit_transparent" {
 
     Properties {
         _BaseMap ("BaseMap", 2D) = "white" {}
         _BaseColor ("BaseColor", Color) = (1,1,1,1)
+        _Cutoff ("Cutoff", Range(0,1)) = 0.5
+        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("SrcBlend", Float) = 1.0
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("DstBlend", Float) = 0
     }
 
     SubShader {
 
-        Name "JRPUnlit"
+        Name "JRPUnlit_Transparent"
 
         Tags {
-            "RenderType" = "Opaque"
-            "Queue" = "Geometry"
+            "RenderType" = "Transparent"
+            "Queue" = "Transparent"
             "LightMode" = "JRPUnlit"
         }
 
@@ -27,6 +30,8 @@ Shader "JRP/3D/jrp_3d_default_unlit" {
         ENDHLSL
 
         Pass {
+
+            Blend [_SrcBlend] [_DstBlend]
 
             HLSLPROGRAM
             #pragma multi_compile_instancing
