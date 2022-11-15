@@ -8,6 +8,8 @@ Shader "JRP/3D/jrp_3d_lit" {
 
     SubShader {
 
+        Name "JRPLit"
+
         Tags {
             "RenderType" = "Opaque"
             "Queue" = "Geometry"
@@ -21,6 +23,7 @@ Shader "JRP/3D/jrp_3d_lit" {
         CBUFFER_START(_CustomLight)
         float3 _DirectLightDir;
         float3 _DirectLightColor;
+        float _DirectLightIntensity;
         CBUFFER_END
 
         UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
@@ -71,10 +74,10 @@ Shader "JRP/3D/jrp_3d_lit" {
                 float nl = max(ndot, 0.0);
 
                 // diffuse
-                float3 diff = _DirectLightColor * _Diffuse.rgb * nl;
+                float3 diff = _DirectLightColor.rgb * _Diffuse.rgb * nl * _DirectLightIntensity;
 
                 // 环境光
-                diff += UNITY_LIGHTMODEL_AMBIENT.rgb;
+                // diff += UNITY_LIGHTMODEL_AMBIENT.rgb;
 
                 // 高光
                 float3 viewDir = normalize(_WorldSpaceCameraPos - i.posWS);

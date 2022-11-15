@@ -5,18 +5,26 @@ namespace JackRenderPipeline {
 
     internal static class JRPLightRendererUtil {
 
-        internal static void Setup(CommandBuffer lightBuffer, in ScriptableRenderContext ctx) {
+        internal static void Setup(JRPFacades facades, in ScriptableRenderContext ctx) {
+            
+            var lightBuffer = facades.LightBuffer;
             lightBuffer.BeginSample(lightBuffer.name);
-            SetupDirectLight(lightBuffer);
+            SetupDirectLight(facades, lightBuffer);
+
+            JRPShadowRendererUtil.Setup(ctx);
+
             lightBuffer.EndSample(lightBuffer.name);
             ctx.ExecuteCommandBuffer(lightBuffer);
             lightBuffer.Clear();
         }
 
-        static void SetupDirectLight(CommandBuffer lightBuffer) {
+        static void SetupDirectLight(JRPFacades facades, CommandBuffer lightBuffer) {
             Light light = RenderSettings.sun;
-            lightBuffer.SetGlobalVector(JRPConfig.LIGHT_DIR_COLOR_ID, light.color.linear);
-            lightBuffer.SetGlobalVector(JRPConfig.LIGHT_DIR_DIR_ID, -light.transform.forward);
+
+            var lightSetting = facades.SettingModel.lightSetting;
+            lightBuffer.SetGlobalFloat(lightSetting.PropLightIntensityID, light.intensity);
+            lightBuffer.SetGlobalVector(lightSetting.PropLightColorID, light.color.linear);
+            lightBuffer.SetGlobalVector(lightSetting.PropLightDirectionID, -light.transform.forward);
         }
 
     }

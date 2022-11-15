@@ -11,7 +11,7 @@ namespace JackRenderPipeline {
             SetupCamera(facades.CameraBuffer, ctx, cam);
 
             // - Setup Light
-            JRPLightRendererUtil.Setup(facades.LightBuffer, ctx);
+            JRPLightRendererUtil.Setup(facades, ctx);
 
             // - 相机空间裁剪
             ScriptableCullingParameters cullingParams;
@@ -19,6 +19,9 @@ namespace JackRenderPipeline {
             if (!hasCullingParam) {
                 return;
             }
+
+            var shadowDistance = facades.SettingModel.shadowSetting.maxDistance;
+            cullingParams.shadowDistance = Mathf.Min(shadowDistance, cam.farClipPlane);
 
 #if UNITY_EDITOR
             // - Scene UI
@@ -29,17 +32,17 @@ namespace JackRenderPipeline {
             var cullingResults = ctx.Cull(ref cullingParams);
 
             // - 画不透明
-            DrawOpaqueObjects(ctx, cam, cullingResults);
+            DrawOpaqueObjects(facades, ctx, cam, cullingResults);
 
             // - 画天空盒
             DrawSkyBox(ctx, cam);
 
             // - 画透明
-            DrawTransparentObjects(ctx, cam, cullingResults);
+            DrawTransparentObjects(facades, ctx, cam, cullingResults);
 
 #if UNITY_EDITOR
             // - 画不支持
-            EditorDrawUnsupportedObjects(ctx, cam, cullingResults);
+            EditorDrawUnsupportedObjects(facades, ctx, cam, cullingResults);
 
             // - Gizmos
             EditorDrawGizmos(ctx, cam);
@@ -80,17 +83,18 @@ namespace JackRenderPipeline {
 
         }
 
-        static void DrawOpaqueObjects(in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
+        static void DrawOpaqueObjects(JRPFacades facades, in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
 
             // - Sort Settings
             SortingSettings sortingSettings = new SortingSettings(cam);
             sortingSettings.criteria = SortingCriteria.CommonOpaque;
 
             // - Draw Setting
+            var shaderSetting = facades.SettingModel.shaderSetting;
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
-            drawingSettings.SetShaderPassName(0, JRPConfig.SHADER_TAG_UNLIT);
-            drawingSettings.SetShaderPassName(1, JRPConfig.SHADER_TAG_LIT);
+            drawingSettings.SetShaderPassName(0, new ShaderTagId(shaderSetting.supportedUnlit));
+            drawingSettings.SetShaderPassName(1, new ShaderTagId(shaderSetting.supportedLit));
 
             // - Filter Setting
             // 处理透明
@@ -101,16 +105,17 @@ namespace JackRenderPipeline {
 
         }
 
-        static void DrawTransparentObjects(in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
+        static void DrawTransparentObjects(JRPFacades facades, in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
 
             // - Sort Settings
             SortingSettings sortingSettings = new SortingSettings(cam);
             sortingSettings.criteria = SortingCriteria.CommonTransparent;
 
             // - Draw Setting
+            var shaderSetting = facades.SettingModel.shaderSetting;
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
-            drawingSettings.SetShaderPassName(0, JRPConfig.SHADER_TAG_UNLIT);
+            drawingSettings.SetShaderPassName(0, new ShaderTagId(shaderSetting.supportedUnlit));
 
             // - Filter Setting
             // 处理不透明
@@ -122,17 +127,24 @@ namespace JackRenderPipeline {
         }
 
 #if UNITY_EDITOR
-        static void EditorDrawUnsupportedObjects(in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
+        static void EditorDrawUnsupportedObjects(JRPFacades facades, in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
 
             SortingSettings sortingSettings = new SortingSettings(cam);
 
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
 
-            var arr = JRPConfig.SHADER_TAG_UNSUPPORTED_ARRAY;
+            var settingModel = facades.SettingModel;
+            var shaderSetting = settingModel.shaderSetting;
+            var arr = shaderSetting.unsupportedLightModeArray;
+            if (arr == null) {
+                return;
+            }
+
+            var materialSetting = settingModel.materialSetting;
             for (int i = 0; i < arr.Length; i += 1) {
-                drawingSettings.SetShaderPassName(i, arr[i]);
-                drawingSettings.overrideMaterial = JRPConfig.MAT_ERROR;
+                drawingSettings.SetShaderPassName(i, new ShaderTagId(arr[i]));
+                drawingSettings.overrideMaterial = materialSetting.error;
             }
 
             FilteringSettings filteringSettings = FilteringSettings.defaultValue;

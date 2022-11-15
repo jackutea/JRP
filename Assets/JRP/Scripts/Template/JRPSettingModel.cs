@@ -3,9 +3,20 @@ using System;
 namespace JackRenderPipeline {
 
     [Serializable]
-    public struct JRPSettingModel {
+    public class JRPSettingModel {
 
-        public bool isEnableSRPBatching;
+        public JRPBatchingSettingModel batchingSetting;
+        public JRPBufferSettingModel bufferSetting;
+        public JRPShaderSettingModel shaderSetting;
+        public JRPLightSettingModel lightSetting;
+        public JRPMaterialSettingModel materialSetting;
+        public JRPShadowSettingModel shadowSetting;
+
+        public JRPSettingModel() {}
+
+        public void Init() {
+            lightSetting.Init();
+        }
 
     }
 

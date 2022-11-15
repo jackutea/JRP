@@ -10,10 +10,23 @@ namespace JackRenderPipeline {
 
         public JRP(JRPSettingModel settingModel) {
 
+            // - Ctor
             this.facades = new JRPFacades();
 
-            // SRP Batch
-            GraphicsSettings.useScriptableRenderPipelineBatching = settingModel.isEnableSRPBatching;
+            var globalSetting = settingModel.bufferSetting;
+            CommandBuffer cameraBuffer = new CommandBuffer() { name = globalSetting.cameraBufferName };
+            CommandBuffer lightBuffer = new CommandBuffer() { name = globalSetting.lightBufferName };
+            CommandBuffer shadowBuffer = new CommandBuffer() { name = globalSetting.shadowBufferName };
+
+            // - Inject
+            this.facades.Inject(settingModel, cameraBuffer, lightBuffer, shadowBuffer);
+
+            // - Init
+            settingModel.Init();
+
+            // - SRP Batch
+            var batchingSetting = settingModel.batchingSetting;
+            GraphicsSettings.useScriptableRenderPipelineBatching = batchingSetting.isEnableSRPBatching;
 
             Debug.Log("JRP Created");
 

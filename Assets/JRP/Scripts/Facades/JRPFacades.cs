@@ -4,19 +4,27 @@ namespace JackRenderPipeline {
 
     public class JRPFacades {
 
+        JRPSettingModel settingModel;
+        public JRPSettingModel SettingModel => settingModel;
+
         CommandBuffer cameraBuffer;
         public CommandBuffer CameraBuffer => cameraBuffer;
 
         CommandBuffer lightBuffer;
         public CommandBuffer LightBuffer => lightBuffer;
 
-        public JRPFacades() {
-            
-            cameraBuffer = new CommandBuffer();
-            cameraBuffer.name = JRPConfig.BUFFER_CAMERA;
+        CommandBuffer shadowBuffer;
+        public CommandBuffer ShadowBuffer => shadowBuffer;
 
-            lightBuffer = new CommandBuffer();
-            lightBuffer.name = JRPConfig.BUFFER_LIGHT;
+        public JRPFacades() { }
+
+        public void Inject(JRPSettingModel settingModel, CommandBuffer cameraCB, CommandBuffer lightCB, CommandBuffer shadowCB) {
+
+            this.settingModel = settingModel;
+
+            this.cameraBuffer = cameraCB;
+            this.lightBuffer = lightCB;
+            this.shadowBuffer = shadowCB;
 
         }
 

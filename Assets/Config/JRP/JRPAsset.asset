@@ -13,4 +13,31 @@ MonoBehaviour:
   m_Name: JRPAsset
   m_EditorClassIdentifier: 
   settingModel:
-    isEnableSRPBatching: 1
+    batchingSetting:
+      isEnableSRPBatching: 1
+    bufferSetting:
+      cameraBufferName: Camera
+      lightBufferName: Light
+      shadowBufferName: Shadow
+    shaderSetting:
+      supportedLit: JRPLit
+      supportedUnlit: JRPUnlit
+      supportedOtherLightModeArray: []
+      unsupportedLightModeArray:
+      - SRPDefaultUnlit
+      - Always
+      - ForwardBase
+      - PrepassBase
+      - Vertex
+      - VertexLMRGBM
+      - VertexLM
+    lightSetting:
+      propLightColorName: _DirectLightColor
+      propLightDirectionName: _DirectLightDir
+      propLightIntensityName: _DirectLightIntensity
+    materialSetting:
+      error: {fileID: 2100000, guid: 9add9e5659bd5eb42b904cf948e03534, type: 2}
+    shadowSetting:
+      maxShadowCount: 0
+      maxDistance: 0
+      atlasSize: 0

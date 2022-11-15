@@ -1,4 +1,4 @@
-Shader "JRP/3D/jrp_sha_3d_unlit" {
+Shader "JRP/3D/jrp_3d_unlit" {
 
     Properties {
         _BaseMap ("BaseMap", 2D) = "white" {}
