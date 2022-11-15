@@ -10,9 +10,12 @@ namespace JackRenderPipeline {
 
         // - Shader
         public static readonly ShaderTagId[] SHADER_TAG_SUPPORTED_ARRAY = new ShaderTagId[] {
-            new ShaderTagId("JRPLightMode"),
-            new ShaderTagId("SRPDefaultUnlit"),
+            SHADER_TAG_UNLIT,
+            SHADER_TAG_LIT,
         };
+
+        public static readonly ShaderTagId SHADER_TAG_UNLIT = new ShaderTagId("JRPUnlit");
+        public static readonly ShaderTagId SHADER_TAG_LIT = new ShaderTagId("JRPLit");
 
         public static readonly ShaderTagId[] SHADER_TAG_UNSUPPORTED_ARRAY = new ShaderTagId[] {
             new ShaderTagId("Always"),

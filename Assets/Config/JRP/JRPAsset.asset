@@ -9,6 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a1dcef24e5637648954fa1faa997f95, type: 3}
-  m_Name: JRP Asset
+  m_Script: {fileID: 11500000, guid: bd4b4aa5248116948ac0188b641b733e, type: 3}
+  m_Name: JRPAsset
   m_EditorClassIdentifier: 
+  settingModel:
+    isEnableSRPBatching: 1

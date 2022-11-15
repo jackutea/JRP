@@ -22,6 +22,7 @@ namespace JackRenderPipeline {
             EditorPrepareSceneUI(cam);
 #endif
 
+            // - 剔除
             var cullingResults = ctx.Cull(ref cullingParams);
 
             // - 画不透明
@@ -85,11 +86,7 @@ namespace JackRenderPipeline {
             // - Draw Setting
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
-
-            var arr = JRPConfig.SHADER_TAG_SUPPORTED_ARRAY;
-            for (int i = 0; i < arr.Length; i += 1) {
-                drawingSettings.SetShaderPassName(i, arr[i]);
-            }
+            drawingSettings.SetShaderPassName(0, JRPConfig.SHADER_TAG_UNLIT);
 
             // - Filter Setting
             // 处理透明
@@ -109,11 +106,7 @@ namespace JackRenderPipeline {
             // - Draw Setting
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
-
-            var arr = JRPConfig.SHADER_TAG_SUPPORTED_ARRAY;
-            for (int i = 0; i < arr.Length; i += 1) {
-                drawingSettings.SetShaderPassName(i, arr[i]);
-            }
+            drawingSettings.SetShaderPassName(0, JRPConfig.SHADER_TAG_UNLIT);
 
             // - Filter Setting
             // 处理不透明

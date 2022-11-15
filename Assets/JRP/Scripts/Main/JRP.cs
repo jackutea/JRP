@@ -8,8 +8,15 @@ namespace JackRenderPipeline {
 
         JRPFacades facades;
 
-        public JRP() {
+        public JRP(JRPSettingModel settingModel) {
+
             this.facades = new JRPFacades();
+
+            // SRP Batch
+            GraphicsSettings.useScriptableRenderPipelineBatching = settingModel.isEnableSRPBatching;
+
+            Debug.Log("JRP Created");
+
         }
 
         // 1. 相机剔除
