@@ -19,18 +19,22 @@ Shader "JRP/3D/jrp_3d_lit" {
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
         CBUFFER_START(_CustomLight)
-        float4 _Diffuse;
-        float4 _Specular;
-        float _Gloss;
-        float3 _DirectLightColor;
         float3 _DirectLightDir;
+        float3 _DirectLightColor;
         CBUFFER_END
+
+        UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+        UNITY_DEFINE_INSTANCED_PROP(float4, _Diffuse)
+        UNITY_DEFINE_INSTANCED_PROP(float4, _Specular)
+        UNITY_DEFINE_INSTANCED_PROP(float, _Gloss)
+        UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
         ENDHLSL
 
         pass {
 
             HLSLPROGRAM
+            #pragma multi_compile_instancing
             #pragma vertex vert
             #pragma fragment frag
 
