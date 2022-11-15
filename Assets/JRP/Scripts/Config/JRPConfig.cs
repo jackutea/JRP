@@ -7,6 +7,7 @@ namespace JackRenderPipeline {
 
         // - Buffer
         public const string BUFFER_CAMERA = "CameraBuffer";
+        public const string BUFFER_LIGHT = "LightBuffer";
 
         // - Shader
         public static readonly ShaderTagId[] SHADER_TAG_SUPPORTED_ARRAY = new ShaderTagId[] {
@@ -28,6 +29,10 @@ namespace JackRenderPipeline {
 
         // - Material
         public static readonly Material MAT_ERROR = new Material(Shader.Find("Hidden/InternalErrorShader"));
+
+        // - Light
+        public static int LIGHT_DIR_COLOR_ID = Shader.PropertyToID("_DirectLightColor");
+        public static int LIGHT_DIR_DIR_ID = Shader.PropertyToID("_DirectLightDir");
 
     }
 }

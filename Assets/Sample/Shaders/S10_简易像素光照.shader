@@ -15,7 +15,7 @@ Shader "Custom/3D/S10_简易像素光照" {
     SubShader {
 
         Tags {
-            "LightMode" = "ForwardBase"
+            "LightMode" = "JRPLit"
             "RenderType" = "Opaque"
         }
 

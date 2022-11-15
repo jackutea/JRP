@@ -5,10 +5,13 @@ namespace JackRenderPipeline {
 
     internal static class JRPCameraRendererUtil {
 
-        internal static void RenderCamera(JRPFacades facades, ScriptableRenderContext ctx, Camera cam) {
+        internal static void RenderCamera(JRPFacades facades, in ScriptableRenderContext ctx, Camera cam) {
 
-            // - Setup
-            Setup(facades.CameraBuffer, ctx, cam);
+            // - Setup Camera
+            SetupCamera(facades.CameraBuffer, ctx, cam);
+
+            // - Setup Light
+            JRPLightRendererUtil.Setup(facades.LightBuffer, ctx);
 
             // - 相机空间裁剪
             ScriptableCullingParameters cullingParams;
@@ -48,7 +51,7 @@ namespace JackRenderPipeline {
         }
 
         // ==== Begin ====
-        static void Setup(CommandBuffer cameraBuffer, ScriptableRenderContext ctx, Camera cam) {
+        static void SetupCamera(CommandBuffer cameraBuffer, in ScriptableRenderContext ctx, Camera cam) {
 
             // - 设置相机属性
             ctx.SetupCameraProperties(cam);
@@ -61,13 +64,13 @@ namespace JackRenderPipeline {
                 (flags & CameraClearFlags.Color) != 0 ? cam.backgroundColor.linear : Color.clear);
 
             // - 设置相机缓冲区
-            cameraBuffer.BeginSample(JRPConfig.BUFFER_CAMERA);
+            cameraBuffer.BeginSample(cameraBuffer.name);
             Execute(cameraBuffer, ctx);
 
         }
 
         // ==== Draw ====
-        static void DrawSkyBox(ScriptableRenderContext ctx, Camera cam) {
+        static void DrawSkyBox(in ScriptableRenderContext ctx, Camera cam) {
 
             // - 画天空盒
             CameraClearFlags flags = cam.clearFlags;
@@ -77,7 +80,7 @@ namespace JackRenderPipeline {
 
         }
 
-        static void DrawOpaqueObjects(ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
+        static void DrawOpaqueObjects(in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
 
             // - Sort Settings
             SortingSettings sortingSettings = new SortingSettings(cam);
@@ -87,6 +90,7 @@ namespace JackRenderPipeline {
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
             drawingSettings.SetShaderPassName(0, JRPConfig.SHADER_TAG_UNLIT);
+            drawingSettings.SetShaderPassName(1, JRPConfig.SHADER_TAG_LIT);
 
             // - Filter Setting
             // 处理透明
@@ -97,7 +101,7 @@ namespace JackRenderPipeline {
 
         }
 
-        static void DrawTransparentObjects(ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
+        static void DrawTransparentObjects(in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
 
             // - Sort Settings
             SortingSettings sortingSettings = new SortingSettings(cam);
@@ -118,7 +122,7 @@ namespace JackRenderPipeline {
         }
 
 #if UNITY_EDITOR
-        static void EditorDrawUnsupportedObjects(ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
+        static void EditorDrawUnsupportedObjects(in ScriptableRenderContext ctx, Camera cam, in CullingResults cullingResults) {
 
             SortingSettings sortingSettings = new SortingSettings(cam);
 
@@ -137,7 +141,7 @@ namespace JackRenderPipeline {
 
         }
 
-        static void EditorDrawGizmos(ScriptableRenderContext ctx, Camera cam) {
+        static void EditorDrawGizmos(in ScriptableRenderContext ctx, Camera cam) {
             bool should = UnityEditor.Handles.ShouldRenderGizmos();
             if (should) {
                 ctx.DrawGizmos(cam, GizmoSubset.PreImageEffects);
@@ -152,13 +156,13 @@ namespace JackRenderPipeline {
         }
 #endif
 
-        static void Execute(CommandBuffer cameraBuffer, ScriptableRenderContext ctx) {
+        static void Execute(CommandBuffer cameraBuffer, in ScriptableRenderContext ctx) {
             ctx.ExecuteCommandBuffer(cameraBuffer);
             cameraBuffer.Clear();
         }
 
         // ==== End ====
-        static void Submit(CommandBuffer cameraBuffer, ScriptableRenderContext ctx) {
+        static void Submit(CommandBuffer cameraBuffer, in ScriptableRenderContext ctx) {
 
             // - 提交
             cameraBuffer.EndSample(cameraBuffer.name);

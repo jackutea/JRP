@@ -16,6 +16,7 @@ Shader "Custom/3D/S9_简易顶点光照" {
 
         Tags {
             "RenderType" = "Opaque"
+            "LightMode" = "JRPLit"
         }
 
         LOD 100
