@@ -64,8 +64,9 @@ Shader "JRP/3D/jrp_sha_3d_unlit" {
             output frag(v2f i) {
                 output o;
                 UNITY_SETUP_INSTANCE_ID(i);
+                float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv);
                 float4 color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-                o.color = color;
+                o.color = baseMap * color;
                 return o;
             }
 

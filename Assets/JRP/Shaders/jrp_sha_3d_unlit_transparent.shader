@@ -6,6 +6,7 @@ Shader "JRP/3D/jrp_3d_unlit_transparent" {
         _Cutoff ("Cutoff", Range(0,1)) = 0.5
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("SrcBlend", Float) = 1.0
         [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("DstBlend", Float) = 0
+        [Enum(Off, 0, On, 1)] _ZWrite ("Z Write", Float) = 1
     }
 
     SubShader {
@@ -14,7 +15,7 @@ Shader "JRP/3D/jrp_3d_unlit_transparent" {
 
         Tags {
             "RenderType" = "Transparent"
-            "Queue" = "Transparent"
+            "Queue" = "AlphaTest"
             "LightMode" = "JRPUnlit"
         }
 
@@ -25,6 +26,7 @@ Shader "JRP/3D/jrp_3d_unlit_transparent" {
         UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
         UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST);
         UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor);
+        UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff);
         UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
         ENDHLSL
@@ -32,6 +34,7 @@ Shader "JRP/3D/jrp_3d_unlit_transparent" {
         Pass {
 
             Blend [_SrcBlend] [_DstBlend]
+            ZWrite [_ZWrite]
 
             HLSLPROGRAM
             #pragma multi_compile_instancing
@@ -69,8 +72,10 @@ Shader "JRP/3D/jrp_3d_unlit_transparent" {
             output frag(v2f i) {
                 output o;
                 UNITY_SETUP_INSTANCE_ID(i);
+                float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv);
                 float4 color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-                o.color = color;
+                o.color = baseMap * color;
+                clip(o.color.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
                 return o;
             }
 
