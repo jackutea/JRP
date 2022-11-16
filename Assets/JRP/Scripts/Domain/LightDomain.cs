@@ -13,7 +13,7 @@ namespace JackRenderPipeline {
             lightRepo.SetSunLight(lightRenderer);
         }
 
-        public void SetupSunLight(JRPFacades facades, LightRenderer lightRenderer) {
+        public void SetupSunLight(JRPFacades facades, ScriptableRenderContext ctx, LightRenderer lightRenderer) {
 
             lightRenderer.BeginSample();
 
@@ -22,7 +22,7 @@ namespace JackRenderPipeline {
             // TODO: Shadow Setup
 
             lightRenderer.EndSample();
-            lightRenderer.Execute(facades.RenderContext);
+            lightRenderer.Execute(ctx);
 
         }
 

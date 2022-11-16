@@ -14,11 +14,11 @@ namespace JackRenderPipeline {
             return cameraRenderer;
         }
 
-        internal void SetupCamera(JRPFacades facades, CameraRenderer cameraRenderer) {
-            cameraRenderer.SetupCamera(facades.RenderContext);
+        internal void SetupCamera(ScriptableRenderContext ctx, CameraRenderer cameraRenderer) {
+            cameraRenderer.SetupCamera(ctx);
         }
 
-        internal void CullingAndDraw(JRPFacades facades, CameraRenderer cameraRenderer) {
+        internal void CullingAndDraw(JRPFacades facades, ScriptableRenderContext ctx, CameraRenderer cameraRenderer) {
 
 #if UNITY_EDITOR
             EditorPrepareSceneUI(cameraRenderer);
@@ -30,25 +30,25 @@ namespace JackRenderPipeline {
                 return;
             }
 
-            var cullingResults = cameraRenderer.GetCullingResults(facades.RenderContext, ref cullingParams);
+            var cullingResults = cameraRenderer.GetCullingResults(ctx, ref cullingParams);
 
-            DrawOpaqueObjects(facades, cameraRenderer, cullingResults);
+            DrawOpaqueObjects(facades, ctx, cameraRenderer, cullingResults);
 
-            DrawSkyBox(facades, cameraRenderer);
+            DrawSkyBox(ctx, cameraRenderer);
 
-            DrawTransparentObjects(facades, cameraRenderer, cullingResults);
+            DrawTransparentObjects(facades, ctx, cameraRenderer, cullingResults);
 
 #if UNITY_EDITOR
-            EditorDrawUnsupportedObjects(facades, cameraRenderer, cullingResults);
+            EditorDrawUnsupportedObjects(facades, ctx, cameraRenderer, cullingResults);
 
-            EditorDrawGizmos(facades, cameraRenderer);
+            EditorDrawGizmos(ctx, cameraRenderer);
 #endif
 
-            Submit(facades, cameraRenderer);
+            Submit(ctx, cameraRenderer);
 
         }
 
-        void DrawOpaqueObjects(JRPFacades facades, CameraRenderer cameraRenderer, in CullingResults cullingResults) {
+        void DrawOpaqueObjects(JRPFacades facades, ScriptableRenderContext ctx, CameraRenderer cameraRenderer, in CullingResults cullingResults) {
 
             // - Sort Settings
             SortingSettings sortingSettings = new SortingSettings(cameraRenderer.Cam);
@@ -73,15 +73,15 @@ namespace JackRenderPipeline {
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
 
             // - Draw Renderer
-            cameraRenderer.DrawRenderers(facades.RenderContext, cullingResults, ref drawingSettings, ref filteringSettings);
+            cameraRenderer.DrawRenderers(ctx, cullingResults, ref drawingSettings, ref filteringSettings);
 
         }
 
-        void DrawSkyBox(JRPFacades facades, CameraRenderer cameraRenderer) {
-            cameraRenderer.DrawSkybox(facades.RenderContext);
+        void DrawSkyBox(ScriptableRenderContext ctx, CameraRenderer cameraRenderer) {
+            cameraRenderer.DrawSkybox(ctx);
         }
 
-        void DrawTransparentObjects(JRPFacades facades, CameraRenderer cameraRenderer, in CullingResults cullingResults) {
+        void DrawTransparentObjects(JRPFacades facades, ScriptableRenderContext ctx, CameraRenderer cameraRenderer, in CullingResults cullingResults) {
 
             // - Sort Settings
             SortingSettings sortingSettings = new SortingSettings(cameraRenderer.Cam);
@@ -92,22 +92,30 @@ namespace JackRenderPipeline {
             DrawingSettings drawingSettings = new DrawingSettings();
             drawingSettings.sortingSettings = sortingSettings;
             drawingSettings.SetShaderPassName(0, new ShaderTagId(shaderSetting.supportedUnlit));
+            drawingSettings.SetShaderPassName(1, new ShaderTagId(shaderSetting.supportedLit));
+
+            var otherSupportedArray = shaderSetting.supportedOtherLightModeArray;
+            if (otherSupportedArray != null) {
+                for (int i = 0; i < otherSupportedArray.Length; i += 1) {
+                    drawingSettings.SetShaderPassName(i + 2, new ShaderTagId(otherSupportedArray[i]));
+                }
+            }
 
             // - Filter Setting
             // 处理不透明
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.transparent);
 
             // - Draw Renderer
-            cameraRenderer.DrawRenderers(facades.RenderContext, cullingResults, ref drawingSettings, ref filteringSettings);
+            cameraRenderer.DrawRenderers(ctx, cullingResults, ref drawingSettings, ref filteringSettings);
 
         }
 
-        void Submit(JRPFacades facades, CameraRenderer cameraRenderer) {
-            cameraRenderer.Submit(facades.RenderContext);
+        void Submit(ScriptableRenderContext ctx, CameraRenderer cameraRenderer) {
+            cameraRenderer.Submit(ctx);
         }
 
 #if UNITY_EDITOR
-        void EditorDrawUnsupportedObjects(JRPFacades facades, CameraRenderer cameraRenderer, in CullingResults cullingResults) {
+        void EditorDrawUnsupportedObjects(JRPFacades facades, ScriptableRenderContext ctx, CameraRenderer cameraRenderer, in CullingResults cullingResults) {
 
             SortingSettings sortingSettings = new SortingSettings(cameraRenderer.Cam);
 
@@ -129,15 +137,15 @@ namespace JackRenderPipeline {
 
             FilteringSettings filteringSettings = FilteringSettings.defaultValue;
 
-            cameraRenderer.DrawRenderers(facades.RenderContext, cullingResults, ref drawingSettings, ref filteringSettings);
+            cameraRenderer.DrawRenderers(ctx, cullingResults, ref drawingSettings, ref filteringSettings);
 
         }
 
-        void EditorDrawGizmos(JRPFacades facades, CameraRenderer cameraRenderer) {
+        void EditorDrawGizmos(ScriptableRenderContext ctx, CameraRenderer cameraRenderer) {
             bool should = UnityEditor.Handles.ShouldRenderGizmos();
             if (should) {
-                cameraRenderer.DrawGizmos(facades.RenderContext, GizmoSubset.PreImageEffects);
-                cameraRenderer.DrawGizmos(facades.RenderContext, GizmoSubset.PostImageEffects);
+                cameraRenderer.DrawGizmos(ctx, GizmoSubset.PreImageEffects);
+                cameraRenderer.DrawGizmos(ctx, GizmoSubset.PostImageEffects);
             }
         }
 

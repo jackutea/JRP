@@ -15,10 +15,6 @@ MonoBehaviour:
   settingModel:
     batchingSetting:
       isEnableSRPBatching: 1
-    bufferSetting:
-      cameraBufferName: Camera
-      lightBufferName: Light
-      shadowBufferName: Shadow
     shaderSetting:
       supportedLit: JRPLit
       supportedUnlit: JRPUnlit

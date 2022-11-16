@@ -11,7 +11,7 @@ namespace JackRenderPipeline {
         CommandBuffer buffer;
 
         public CameraRenderer() {
-            this.buffer = new CommandBuffer() { name = "Camera" };
+            this.buffer = new CommandBuffer() { name = "CameraBuffer" };
         }
 
         public void Ctor(Camera cam) {

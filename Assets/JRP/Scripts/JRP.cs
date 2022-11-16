@@ -16,13 +16,8 @@ namespace JackRenderPipeline {
             this.domain = new JRPDomain();
             this.factory = new JRPFactory();
 
-            var globalSetting = settingModel.bufferSetting;
-            CommandBuffer cameraBuffer = new CommandBuffer() { name = globalSetting.cameraBufferName };
-            CommandBuffer lightBuffer = new CommandBuffer() { name = globalSetting.lightBufferName };
-            CommandBuffer shadowBuffer = new CommandBuffer() { name = globalSetting.shadowBufferName };
-
             // - Inject
-            this.facades.Inject(settingModel, cameraBuffer, lightBuffer, shadowBuffer);
+            this.facades.Inject(settingModel);
 
             // - Init
             settingModel.Init();
@@ -36,8 +31,6 @@ namespace JackRenderPipeline {
         }
 
         protected override void Render(ScriptableRenderContext ctx, Camera[] cameras) {
-
-            facades.SetRenderContext(ctx);
 
             var cameraDomain = domain.CameraDomain;
             var cameraRepo = facades.Repo.CameraRepo;
@@ -60,13 +53,13 @@ namespace JackRenderPipeline {
             // - Camera Setup
             cameraRepo.ForEach(cameraRenderer => {
 
-                cameraDomain.SetupCamera(facades, cameraRenderer);
+                cameraDomain.SetupCamera(ctx, cameraRenderer);
 
                 // - Light Setup SunLight
-                lightDomain.SetupSunLight(facades, lightRepo.SunLight);
+                lightDomain.SetupSunLight(facades, ctx, lightRepo.SunLight);
 
                 // ==== Culling && Draw ====
-                cameraDomain.CullingAndDraw(facades, cameraRenderer);
+                cameraDomain.CullingAndDraw(facades, ctx, cameraRenderer);
 
             });
 
@@ -78,6 +71,9 @@ namespace JackRenderPipeline {
             cameraRepo.Clear();
 
             // - Light Release
+            factory.ReleaseLightRenderer(lightRepo.SunLight);
+            lightRepo.SetSunLight(null);
+
             lightRepo.ForEach((lightRenderer) => {
                 factory.ReleaseLightRenderer(lightRenderer);
             });

@@ -6,7 +6,6 @@ namespace JackRenderPipeline {
     public class JRPSettingModel {
 
         public JRPBatchingSettingModel batchingSetting;
-        public JRPBufferSettingModel bufferSetting;
         public JRPShaderSettingModel shaderSetting;
         public JRPLightSettingModel lightSetting;
         public JRPMaterialSettingModel materialSetting;
