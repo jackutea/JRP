@@ -1,2 +1,2 @@
-# JackShader
-自用 Shader 库, 也是练习库
+# JRP (Jack Render Pipeline)
+自用 SRP 管线，目前是练习库
