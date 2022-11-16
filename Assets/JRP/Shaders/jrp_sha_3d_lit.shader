@@ -77,7 +77,7 @@ Shader "JRP/3D/jrp_3d_lit" {
                 float3 diff = _DirectLightColor.rgb * _Diffuse.rgb * nl * _DirectLightIntensity;
 
                 // 环境光
-                // diff += UNITY_LIGHTMODEL_AMBIENT.rgb;
+                diff += UNITY_LIGHTMODEL_AMBIENT.rgb;
 
                 // 高光
                 float3 viewDir = normalize(_WorldSpaceCameraPos - i.posWS);

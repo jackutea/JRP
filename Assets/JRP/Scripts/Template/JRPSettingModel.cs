@@ -16,6 +16,7 @@ namespace JackRenderPipeline {
 
         public void Init() {
             lightSetting.Init();
+            shadowSetting.Init();
         }
 
     }
