@@ -27,7 +27,7 @@ Shader "JSH/2D/PointLight" {
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/Src/Include/JackCG2D.cginc"
+            #include "Assets/com.jackwithtea.jrp/Sample/Include/JackCG2D.cginc"
 
             sampler2D _MainTex;
             float4 _LightColor;

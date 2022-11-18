@@ -22,7 +22,7 @@ Shader "Custom/S4_形状_正方形"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/Src/Include/JackCG2D.cginc"
+            #include "Assets/com.jackwithtea.jrp/Sample/Include/JackCG2D.cginc"
 
             float _XOffset;
             float _YOffset;
