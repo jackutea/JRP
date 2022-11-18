@@ -1,4 +1,4 @@
-Shader "Custom/S6_噪声"
+Shader "Practice/practice_S6_噪声"
 {
 
     Properties {
@@ -17,7 +17,7 @@ Shader "Custom/S6_噪声"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/com.jackwithtea.jrp/Sample/Include/JackCGGeneric.cginc"
+            #include "Include/JackCGGeneric.cginc"
 
             struct vert_input {
                 float4 vertex : POSITION;

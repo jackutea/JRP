@@ -1,4 +1,4 @@
-Shader "Custom/URP/3D/URP_S2_示例lit" {
+Shader "Practice/URP/3D/practice_URP_S2_示例lit" {
 
     Properties {
         _BaseColor ("Base Color", Color) = (1,1,1,1)

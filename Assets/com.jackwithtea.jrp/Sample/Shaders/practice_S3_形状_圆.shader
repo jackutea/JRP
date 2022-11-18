@@ -1,4 +1,4 @@
-Shader "Custom/S3_形状_圆"
+Shader "Practice/practice_S3_形状_圆"
 {
     Properties
     {
@@ -18,7 +18,7 @@ Shader "Custom/S3_形状_圆"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/com.jackwithtea.jrp/Sample/Include/JackCG2D.cginc"
+            #include "Include/JackCG2D.cginc"
 
             float _XOffset;
             float _YOffset;

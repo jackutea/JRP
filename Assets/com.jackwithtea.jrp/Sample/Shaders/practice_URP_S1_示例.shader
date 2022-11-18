@@ -1,4 +1,4 @@
-Shader "Custom/URP/3D/URP_S1_示例" {
+Shader "Practice/URP/3D/practice_URP_S1_示例" {
 
     Properties {
         _BaseMap ("Base (RGB)", 2D) = "white" {}

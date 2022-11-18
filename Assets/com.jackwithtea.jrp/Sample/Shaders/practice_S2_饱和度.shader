@@ -1,4 +1,4 @@
-Shader "Custom/S2_饱和度"
+Shader "Practice/practice_S2_饱和度"
 {
     Properties
     {

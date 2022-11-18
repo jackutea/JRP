@@ -1,7 +1,7 @@
-Shader "Custom/3D/S8_顶点变换" {
+Shader "Practice/practice_S7_贴图" {
 
     Properties {
-        _Size ("Size", Range(0.0, 1.0)) = 0.5
+        _MainTex ("Texture", 2D) = "white" {}
     }
 
     SubShader {
@@ -17,25 +17,18 @@ Shader "Custom/3D/S8_顶点变换" {
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/com.jackwithtea.jrp/Sample/Include/JackCG3D.cginc"
 
-            float _Size;
-            sampler3D _MainTex;
+            sampler2D _MainTex;
 
             struct v2f {
                 float4 vertex : SV_POSITION;
                 float4 uv : TEXCOORD0;
-                float4 pos: TEXCOORD1;
             };
 
             v2f vert(appdata_base v) {
                 v2f o;
-                float4 vt = v.vertex;
-                float dt = _SinTime.w;
-                vt = lerp(vt, float4(normalize(vt.xyz) * _Size, vt.w), dt);
-                o.vertex = UnityObjectToClipPos(vt);
+                o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord;
-                o.pos = v.vertex;
                 return o;
             }
 
@@ -45,7 +38,9 @@ Shader "Custom/3D/S8_顶点变换" {
 
             output frag(v2f i) {
                 output o;
-                o.color = float4(i.uv.xyz, 1);
+                float2 uv = i.uv.xy;
+                float3 color = tex2D(_MainTex, uv).rgb;
+                o.color = float4(color, 1);
                 return o;
             }
 
@@ -56,4 +51,5 @@ Shader "Custom/3D/S8_顶点变换" {
     }
 
     Fallback "Diffuse"
+
 }

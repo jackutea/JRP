@@ -1,4 +1,4 @@
-Shader "Custom/S1_内描边"
+Shader "Practice/practice_S1_内描边"
 {
     Properties
     {

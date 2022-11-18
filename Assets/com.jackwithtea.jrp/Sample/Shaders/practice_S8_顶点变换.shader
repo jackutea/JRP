@@ -1,7 +1,7 @@
-Shader "Custom/S7_贴图" {
+Shader "Practice/3D/practice_S8_顶点变换" {
 
     Properties {
-        _MainTex ("Texture", 2D) = "white" {}
+        _Size ("Size", Range(0.0, 1.0)) = 0.5
     }
 
     SubShader {
@@ -17,18 +17,25 @@ Shader "Custom/S7_贴图" {
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #include "Include/JackCG3D.cginc"
 
-            sampler2D _MainTex;
+            float _Size;
+            sampler3D _MainTex;
 
             struct v2f {
                 float4 vertex : SV_POSITION;
                 float4 uv : TEXCOORD0;
+                float4 pos: TEXCOORD1;
             };
 
             v2f vert(appdata_base v) {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                float4 vt = v.vertex;
+                float dt = _SinTime.w;
+                vt = lerp(vt, float4(normalize(vt.xyz) * _Size, vt.w), dt);
+                o.vertex = UnityObjectToClipPos(vt);
                 o.uv = v.texcoord;
+                o.pos = v.vertex;
                 return o;
             }
 
@@ -38,9 +45,7 @@ Shader "Custom/S7_贴图" {
 
             output frag(v2f i) {
                 output o;
-                float2 uv = i.uv.xy;
-                float3 color = tex2D(_MainTex, uv).rgb;
-                o.color = float4(color, 1);
+                o.color = float4(i.uv.xyz, 1);
                 return o;
             }
 
@@ -51,5 +56,4 @@ Shader "Custom/S7_贴图" {
     }
 
     Fallback "Diffuse"
-
 }

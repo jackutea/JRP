@@ -1,4 +1,4 @@
-Shader "Custom/S5_线"
+Shader "Practice/practice_S5_线"
 {
     Properties
     {
@@ -18,7 +18,7 @@ Shader "Custom/S5_线"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/com.jackwithtea.jrp/Sample/Include/JackCG2D.cginc"
+            #include "Include/JackCG2D.cginc"
             
             float _Width;
             float4 _Color;

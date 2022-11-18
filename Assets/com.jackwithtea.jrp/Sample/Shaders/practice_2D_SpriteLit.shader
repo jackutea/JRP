@@ -1,4 +1,4 @@
-Shader "JSH/2D/JSHSpriteLit" {
+Shader "Practice/2D/practice_JSHSpriteLit" {
 
     Properties {
         _MainTex ("Sprite Texture", 2D) = "white" {}

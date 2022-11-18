@@ -1,4 +1,4 @@
-Shader "Custom/2D/S11_填色" {
+Shader "Practice/2D/practice_S11_填色" {
 
     Properties {
         

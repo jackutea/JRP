@@ -1,4 +1,4 @@
-Shader "Custom/3D/S10_简易像素光照" {
+Shader "Practice/3D/practice_S9_简易顶点光照" {
 
     Properties {
 
@@ -15,8 +15,8 @@ Shader "Custom/3D/S10_简易像素光照" {
     SubShader {
 
         Tags {
-            "LightMode" = "JRPLit"
             "RenderType" = "Opaque"
+            "LightMode" = "JRPLit"
         }
 
         LOD 100
@@ -36,30 +36,17 @@ Shader "Custom/3D/S10_简易像素光照" {
             float _Gloss;
 
             struct v2f {
-                float4 posCS : SV_POSITION;
-                float3 worldNormal : TEXCOORD0;
-                float3 posWS : TEXCOORD1;
+                float4 vertex : SV_POSITION;
+                float3 diff : COLOR;
             };
 
             v2f vert(appdata_base v) {
                 
                 v2f o;
 
-                o.posCS = UnityObjectToClipPos(v.vertex);
-                o.worldNormal = UnityObjectToWorldNormal(v.normal);
-                o.posWS = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.vertex = UnityObjectToClipPos(v.vertex);
 
-                return o;
-            }
-
-            struct output {
-                float4 color : SV_TARGET;
-            };
-
-            output frag(v2f i) {
-                output o;
-
-                float3 worldNormal = i.worldNormal;
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
 
                 // 光方向与顶点法线的点积
                 // 1 表示光线与法线完全一致，0 表示垂直，-1 表示完全相反
@@ -77,14 +64,25 @@ Shader "Custom/3D/S10_简易像素光照" {
                 // 高光
                 float3 reflectDir = normalize(reflect(-lightDir, worldNormal));
 
-                float3 viewDir = normalize(_WorldSpaceCameraPos - i.posWS);
+                float3 viewDir = normalize(_WorldSpaceCameraPos - mul(v.vertex, unity_WorldToObject).xyz);
 
                 float spec = pow(max(dot(viewDir, reflectDir), 0.0), _Gloss);
                 float3 specColor = _LightColor0 * _Specular * spec;
 
                 diff += specColor;
 
-                o.color = float4(diff, 1);
+                o.diff = diff;
+
+                return o;
+            }
+
+            struct output {
+                float4 color : SV_TARGET;
+            };
+
+            output frag(v2f i) {
+                output o;
+                o.color = float4(i.diff, 1);
                 return o;
             }
 
