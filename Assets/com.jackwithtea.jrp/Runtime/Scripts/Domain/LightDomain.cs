@@ -15,6 +15,10 @@ namespace JackRenderPipeline {
 
         public void SetupSunLight(JRPFacades facades, ScriptableRenderContext ctx, LightRenderer lightRenderer) {
 
+            if (lightRenderer == null) {
+                return;
+            }
+
             lightRenderer.BeginSample();
 
             SetupGlobalShaderProperties(facades, lightRenderer);

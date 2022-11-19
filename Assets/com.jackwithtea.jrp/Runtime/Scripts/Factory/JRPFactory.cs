@@ -32,6 +32,9 @@ namespace JackRenderPipeline {
         }
 
         public void ReleaseLightRenderer(LightRenderer lightRenderer) {
+            if (lightRenderer == null) {
+                return;
+            }
             this.lightPool.Release(lightRenderer);
         }
 

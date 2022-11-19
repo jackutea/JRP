@@ -47,7 +47,9 @@ namespace JackRenderPipeline {
 
             // - Light Spawn
             var lightSun = RenderSettings.sun;
-            lightDomain.SpawnSunLight(factory, facades, lightSun);
+            if (lightSun != null) {
+                lightDomain.SpawnSunLight(factory, facades, lightSun);
+            }
 
             // ==== Setup ====
             // - Camera Setup
