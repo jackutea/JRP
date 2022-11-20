@@ -1,4 +1,4 @@
-Shader "JRP/3D/jrp_3d_unlit" {
+Shader "JRP/Common/jrp_unlit" {
 
     Properties {
         _BaseMap ("BaseMap", 2D) = "white" {}
@@ -17,7 +17,7 @@ Shader "JRP/3D/jrp_3d_unlit" {
 
         HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
-        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl" 
 
         UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
         UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST);
